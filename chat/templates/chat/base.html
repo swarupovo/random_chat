@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>admin-login</title>
+    <style>
+        h2 {
+            text-shadow: 3px 2px red;
+        }
+    </style>
+</head>
+<body>
+     <div align="center">
+        {% if messages %}
+            {% for message in messages %}
+                <h4 style="color:green"><b><label {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</label></b></h4>
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
+    <div align="center" class="container">
+        <h2><b>:Chat with random people:</b></h2>
+        <h1>Chose Option</h1>
+        <li ><a href="{% url 'user_log'%}"><span>Login</span></a>
+                        </li>
+        <li><a href="{% url 'user_reg'%}"><span>Register Yourself</span></a>
+                        </li>
+    </div>
+</body>
