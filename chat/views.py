@@ -15,11 +15,45 @@ from django.contrib.auth.models import User
 from django.views.generic.base import View
 
 from .forms import UserRegForm, LoginForm
+from django.core.mail import send_mail
+from django.conf import settings
+
+ip = "127.0.0.1"
+port = "27017"
+database = "my_area_local"
+conn = pymongo.MongoClient('mongodb://{}:{}/{}'.format(ip, port, database))
+db = conn[database]
+rc = db['room_chat']
+
+
+class Error(Exception):
+   """Base class for other exceptions"""
+   pass
+class EmailIsNotValid(Error):
+   """Raised when the input value is too large"""
+   pass
+
+
+def email(sub,msg,r_email):
+    subject = sub
+    message = msg
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [r_email,]
+    send_mail( subject, message, email_from, recipient_list )
+    return 1
 
 @csrf_exempt
 def index(request):
     if request.user.is_authenticated:
-        return render(request, 'chat/index.html', {})
+        avilable_chat_room=rc.distinct("chat_room")
+        final_lst=[]
+        i=1
+        for each in avilable_chat_room:
+            dicto = {"SrNo":i, "room_name":each, "created": rc.find_one({"chat_room": each})['time']}
+            final_lst.append(dicto)
+            i=i+1
+
+        return render(request, 'chat/index.html', {"chat_room": final_lst})
     else:
         return HttpResponseRedirect('/dashboard/')
 
@@ -81,6 +115,7 @@ def login_form(request):
                             login(request, user)
                             print(user)
                             messages.success(request, "you are successfully login")
+
                             return HttpResponseRedirect('/chat/')
                         else:
                             messages.success(request, "you entered a wrong password ")
@@ -123,7 +158,14 @@ def Reg_Form(request):
                 data.set_password(password)
                 data.save()
                 messages.success(request, "form submited successfully")
+                try:
+                    email("Do_not_reply", "you are successfully register MR/MS.{} {} and your username and password is {}  {}".format(firstname, lastname, username, password))
+                except:
+                    raise EmailIsNotValid
                 return render(request, "chat/login.html", {'login_form': login()})
+            except EmailIsNotValid:
+                messages.error(request, "somithing went wrong With Your Email")
+                return render(request, "chat/registration.html", {'registration_form': formclass()})
 
             except Exception as E:
                 messages.error(request, "somithing went wrong {}".format(E))

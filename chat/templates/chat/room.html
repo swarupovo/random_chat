@@ -58,7 +58,7 @@
         <li  class="w3-large" style="color:red"><a href="{% url 'logout'%}"><span><i class="glyphicon glyphicon-user"></i>LogOut</span></a></li>
         <h1 align="center">Welcome To {{ room_name_json }} Chat</h1>
     </div>
-    <textarea name="thetext" id="chat-log" cols="100" rows="20" style="color:white"  readonly>{% for e in message %}
+    <textarea name="thetext" id="chat-log" cols="100" rows="20" style="color:black"  readonly>{% for e in message %}
         {{e.time}}{{":"}}{{e.message}}
         {% endfor %}</textarea><br/>
     <input id="chat-message-input" type="text" />
