@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 # from .models import userdata
 from django.views.generic.base import View
 
+from chat.models import UserImage
 from .forms import UserRegForm, LoginForm
 
 @csrf_exempt
@@ -107,7 +108,9 @@ def Reg_Form(request):
         return render(request,  "chat/registration.html", {'registration_form': formclass()})
 
     else:
-        regform = formclass(request.POST)
+
+        regform = formclass(request.POST, request.FILES)
+        print(regform)
         if regform.is_valid():
             data = request.POST.copy()
             firstname = data.get('firstname')
@@ -115,6 +118,9 @@ def Reg_Form(request):
             username = data.get('username')
             password = data.get('password')
             email_id = data.get('email_id')
+            profile_pic = request.FILES.getlist('profile_pic')
+            print(profile_pic)
+            # print(data.FILES.getlist('images'))
 
 
             try:
@@ -122,6 +128,9 @@ def Reg_Form(request):
                 data = User(first_name=firstname, last_name=lastname, username=username, email=email_id)
                 data.set_password(password)
                 data.save()
+                user_photo = UserImage.objects.create(user=data, photo=profile_pic[0])
+                user_photo.save()
+
                 messages.success(request, "form submited successfully")
                 return render(request, "chat/login.html", {'login_form': login()})
 

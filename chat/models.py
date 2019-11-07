@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -11,5 +12,11 @@ from django.db import models
 #
 #     def __str__(self):
 #         return self.username
+
+
+class UserImage(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to='images/profile_pic/', default='images/profile_pic/default.jpg')
+    
 
 

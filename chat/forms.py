@@ -8,6 +8,7 @@ class UserRegForm(forms.Form):
     username = forms.CharField(label="UserName", max_length=50)
     password = forms.CharField(label="Password", max_length=50, widget=forms.PasswordInput)
     email_id = forms.CharField(label="Email_Id", max_length=100, widget=forms.EmailInput)
+    profile_pic = forms.ImageField(label="Profile Picture")
     # gender = forms.CharField(label="GENDER", max_length=10)
 
 

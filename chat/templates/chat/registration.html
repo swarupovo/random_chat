@@ -18,7 +18,7 @@
     </div>
     <div align="center" class="container">
         <h1>Admin Login</h1>
-        <form  action="{% url 'user_reg' %}" method="POST" >
+        <form  action="{% url 'user_reg' %}" enctype="multipart/form-data" method="POST" >
         {% csrf_token %}
             {{ registration_form.as_p }}
 
